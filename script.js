@@ -1,57 +1,3 @@
-// function addTodo() {
-//   const todoInput = document.getElementById('todoInput');
-//   const todoText = todoInput.value.trim();
-
-//   if (todoText === '') {
-//     alert('please ENTER a task');
-//     return;
-//   }
-
-//   const todoList = document.getElementById('todoList');
-//   const todoItem = document.getElementById('li');
-
-//   todoItem.textContent = todoText;
-
-//   todoItem.addEventListener('click', () => {
-//     todoItem.classList.toggle('completed');
-//   });
-
-//   const deleteButton = document.createElement('button');
-//   deleteButton.textContent = 'Delete';
-//   deleteButton.addEventListener('click', () => {
-//     if (todoItem) {
-//       todoList.removeChild(todoItem);
-//     } else {
-//       console.error('todoItem is null');
-//     }
-//   });
-
-//   todoItem.appendChild(deleteButton);
-//   todoList.appendChild(todoItem);
-
-//   todoInput.value = '';
-// } 
-
-// document.getElementById('todoInput').addEventListener('keypress', function(e) {
-//   if (e.key === 'Enter'){
-//     addTodo();
-//   }
-// });
-const itemsArray = localStorage.getItem("items") ? JSON.parse(localStorage.getItem("items")): []
-
-console.log(itemsArray)
-
-document.querySelector("#enter").addEventListener("click", () => {
-  const item = document.querySelector("#item")
-  createItem(item)
-})
-
-function createItem(item){
-  itemsArray.push(item.value)
-  localStorage.setItem("items", JSON.stringify(itemsArray))
-  location.reload()
-}
-
 function displayDate(){
   let date = new Date()
   date = date.toString().split(" ")
@@ -60,6 +6,46 @@ function displayDate(){
 }
 
 window.onload = function(){
-  displayDate()
-  displayItems()
+  displayDate();
 }
+
+// code below is for inputting data e.t.c 
+
+const inputBox = document.getElementById("input-box");
+const listContainer = document.getElementById("list-container");
+
+function addTask(){
+  if(inputBox.value === ''){
+    alert("You must enter a task!");
+  }
+  else{
+    let li = document.createElement("li");
+    li.innerHTML = inputBox.value;
+    listContainer.appendChild(li);
+    let span = document.createElement("span");
+    span.innerHTML = "\u00d7";
+    li.appendChild(span);
+  }
+  inputBox.value = "";
+  saveData();
+}
+
+listContainer.addEventListener("click", function(e){
+  if(e.target.tagName === "li"){
+    e.target.classList.toggle("checked");
+    saveData();
+  }
+  else if(e.target.tagName === "SPAN"){
+    e.target.parentElement.remove();
+    saveData();
+  }
+}, false);
+
+function saveData(){
+  localStorage.setItem("data", listContainer.innerHTML);
+}
+
+function showTask(){
+  listContainer.innerHTML = localStorage.getItem("data");
+}
+showTask(); 
